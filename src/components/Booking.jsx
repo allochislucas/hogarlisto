@@ -1,12 +1,32 @@
 import { useState } from 'react'
 
+const WHATSAPP_NUMBER = '5492302576324'
+
 const PRICE_PER_HOUR = 3000
-const SERVICE_OPTIONS = ['Limpieza general', 'Limpieza profunda', 'Limpieza por horas']
 const HOURS_OPTIONS = [2, 3, 4, 5]
 
-// ← Reemplazá con el número de WhatsApp real (sin +, con código de país)
-// Ejemplo Córdoba Argentina: 5493510000000
-const WHATSAPP_NUMBER = '5492302576324'
+const CLEANING_SERVICES = ['Limpieza general', 'Limpieza profunda', 'Limpieza por horas']
+const M2_GUIDE = {
+  'Limpieza general': '1h cada 25m² · Ej: 75m² → 3h',
+  'Limpieza profunda': '1h cada 20m² · Ej: 60m² → 3h',
+}
+
+const GARDEN_OPTIONS = [
+  { label: 'Hasta 50m²', value: 'hasta_50', price: 35000 },
+  { label: '50 – 100m²', value: '50_100',  price: 55000 },
+  { label: 'Más de 100m²', value: 'mas_100', price: null },
+]
+
+const POOL_OPTIONS = [
+  { label: 'Chica',  sub: 'hasta 6m²',    value: 'chica',   price: 20000 },
+  { label: 'Mediana', sub: 'hasta 9m²',   value: 'mediana', price: 30000 },
+  { label: 'Grande',  sub: 'más de 10m²', value: 'grande',  price: 40000 },
+]
+
+const SERVICE_TYPES = [
+  { group: '🏠 Limpieza', items: ['Limpieza general', 'Limpieza profunda', 'Limpieza por horas'] },
+  { group: '🌿 Exteriores', items: ['Jardinero', 'Piletero'] },
+]
 
 const fmt = (n) => n.toLocaleString('es-AR')
 const fmtDate = (s) => {
@@ -15,28 +35,78 @@ const fmtDate = (s) => {
   return `${d}/${m}/${y}`
 }
 
-const buildWhatsAppURL = ({ service, date, shift, hours, total }) => {
+const getServiceType = (service) => {
+  if (CLEANING_SERVICES.includes(service)) return 'cleaning'
+  if (service === 'Jardinero') return 'garden'
+  if (service === 'Piletero') return 'pool'
+  return 'cleaning'
+}
+
+const buildWhatsAppURL = ({ service, date, shift, hours, gardenOption, poolOption }) => {
+  const type = getServiceType(service)
+  let precioLine = ''
+
+  if (type === 'cleaning') {
+    precioLine = `💰 *Total estimado:* $${fmt(hours * PRICE_PER_HOUR)}`
+  } else if (type === 'garden') {
+    const opt = GARDEN_OPTIONS.find(o => o.value === gardenOption)
+    precioLine = opt?.price
+      ? `💰 *Precio:* $${fmt(opt.price)}`
+      : `💰 *Precio:* A presupuestar (jardín de más de 100m²)`
+  } else if (type === 'pool') {
+    const opt = POOL_OPTIONS.find(o => o.value === poolOption)
+    precioLine = `💰 *Precio:* $${fmt(opt.price)}`
+  }
+
+  let detallesLine = ''
+  if (type === 'cleaning') {
+    detallesLine = `⏱️ *Duración:* ${hours} horas\n`
+  } else if (type === 'garden') {
+    const opt = GARDEN_OPTIONS.find(o => o.value === gardenOption)
+    detallesLine = `📐 *Tamaño jardín:* ${opt?.label}\n`
+  } else if (type === 'pool') {
+    const opt = POOL_OPTIONS.find(o => o.value === poolOption)
+    detallesLine = `🏊 *Tamaño pileta:* ${opt?.label} (${opt?.sub})\n`
+  }
+
   const mensaje =
     `¡Hola HogarListo! 👋 Quiero reservar un servicio:\n\n` +
     `📋 *Servicio:* ${service}\n` +
     `📅 *Fecha:* ${fmtDate(date)}\n` +
     `🕐 *Turno:* ${shift.charAt(0).toUpperCase() + shift.slice(1)}\n` +
-    `⏱️ *Duración:* ${hours} horas\n` +
-    `💰 *Total:* $${fmt(total)}\n\n` +
+    detallesLine +
+    precioLine + `\n\n` +
     `Quedo a la espera de confirmación. ¡Gracias!`
 
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(mensaje)}`
 }
 
 export default function Booking() {
-  const [service, setService] = useState(SERVICE_OPTIONS[0])
-  const [date, setDate] = useState('')
-  const [shift, setShift] = useState('mañana')
-  const [hours, setHours] = useState(2)
-  const [dateError, setDateError] = useState(false)
+  const [service, setService]         = useState('Limpieza general')
+  const [date, setDate]               = useState('')
+  const [shift, setShift]             = useState('mañana')
+  const [hours, setHours]             = useState(2)
+  const [gardenOption, setGarden]     = useState('hasta_50')
+  const [poolOption, setPool]         = useState('chica')
+  const [dateError, setDateError]     = useState(false)
 
-  const total = hours * PRICE_PER_HOUR
+  const type  = getServiceType(service)
   const today = new Date().toISOString().split('T')[0]
+
+  const getTotal = () => {
+    if (type === 'cleaning') return hours * PRICE_PER_HOUR
+    if (type === 'garden') {
+      const opt = GARDEN_OPTIONS.find(o => o.value === gardenOption)
+      return opt?.price ?? null
+    }
+    if (type === 'pool') {
+      const opt = POOL_OPTIONS.find(o => o.value === poolOption)
+      return opt?.price ?? null
+    }
+    return null
+  }
+
+  const total = getTotal()
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -46,7 +116,7 @@ export default function Booking() {
       return
     }
     setDateError(false)
-    const url = buildWhatsAppURL({ service, date, shift, hours, total })
+    const url = buildWhatsAppURL({ service, date, shift, hours, gardenOption, poolOption })
     window.open(url, '_blank')
   }
 
@@ -54,61 +124,55 @@ export default function Booking() {
     <section id="reservar" className="py-16 md:py-24 px-4 bg-white">
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-10">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Reservá tu limpieza</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Reservá tu servicio</h2>
           <p className="text-gray-500 text-lg">Completá los datos y te contactamos por WhatsApp</p>
         </div>
 
-        <form
-          onSubmit={handleSubmit}
-          className="bg-white border-2 border-gray-100 rounded-2xl p-6 md:p-8 shadow-sm"
-        >
-          {/* Service */}
+        <form onSubmit={handleSubmit} className="bg-white border-2 border-gray-100 rounded-2xl p-6 md:p-8 shadow-sm">
+
+          {/* Service selector */}
           <fieldset className="mb-7">
-            <legend className="block text-sm font-semibold text-gray-700 mb-3">
-              Tipo de servicio
-            </legend>
-            <div className="space-y-2">
-              {SERVICE_OPTIONS.map((s) => (
-                <button
-                  key={s}
-                  type="button"
-                  onClick={() => setService(s)}
-                  className={`w-full text-left px-4 py-3 rounded-xl border-2 font-medium text-sm transition-all ${
-                    service === s
-                      ? 'border-green-500 bg-green-50 text-green-700'
-                      : 'border-gray-200 text-gray-600 hover:border-green-200 hover:bg-gray-50'
-                  }`}
-                >
-                  {service === s && <span className="mr-2 text-green-500">✓</span>}
-                  {s}
-                </button>
+            <legend className="block text-sm font-semibold text-gray-700 mb-3">Tipo de servicio</legend>
+            <div className="space-y-4">
+              {SERVICE_TYPES.map((group) => (
+                <div key={group.group}>
+                  <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-2">{group.group}</p>
+                  <div className="space-y-2">
+                    {group.items.map((s) => (
+                      <button
+                        key={s}
+                        type="button"
+                        onClick={() => setService(s)}
+                        className={`w-full text-left px-4 py-3 rounded-xl border-2 font-medium text-sm transition-all ${
+                          service === s
+                            ? 'border-green-500 bg-green-50 text-green-700'
+                            : 'border-gray-200 text-gray-600 hover:border-green-200 hover:bg-gray-50'
+                        }`}
+                      >
+                        {service === s && <span className="mr-2 text-green-500">✓</span>}
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               ))}
             </div>
           </fieldset>
 
           {/* Date */}
           <div className="mb-7">
-            <label htmlFor="date-input" className="block text-sm font-semibold text-gray-700 mb-2">
-              Fecha
-            </label>
+            <label htmlFor="date-input" className="block text-sm font-semibold text-gray-700 mb-2">Fecha</label>
             <input
               id="date-input"
               type="date"
               min={today}
               value={date}
-              onChange={(e) => {
-                setDate(e.target.value)
-                setDateError(false)
-              }}
+              onChange={(e) => { setDate(e.target.value); setDateError(false) }}
               className={`w-full border-2 rounded-xl px-4 py-3 text-gray-700 focus:outline-none transition-colors ${
-                dateError
-                  ? 'border-red-400 bg-red-50'
-                  : 'border-gray-200 focus:border-green-500'
+                dateError ? 'border-red-400 bg-red-50' : 'border-gray-200 focus:border-green-500'
               }`}
             />
-            {dateError && (
-              <p className="text-red-500 text-xs mt-1.5">Por favor seleccioná una fecha</p>
-            )}
+            {dateError && <p className="text-red-500 text-xs mt-1.5">Por favor seleccioná una fecha</p>}
           </div>
 
           {/* Shift */}
@@ -117,7 +181,7 @@ export default function Booking() {
             <div className="grid grid-cols-2 gap-3">
               {[
                 { value: 'mañana', label: 'Mañana', icon: '🌅', sub: '8:00 – 13:00' },
-                { value: 'tarde', label: 'Tarde', icon: '🌆', sub: '14:00 – 19:00' },
+                { value: 'tarde',  label: 'Tarde',  icon: '🌆', sub: '14:00 – 19:00' },
               ].map((t) => (
                 <button
                   key={t.value}
@@ -137,38 +201,118 @@ export default function Booking() {
             </div>
           </fieldset>
 
-          {/* Hours */}
-          <fieldset className="mb-7">
-            <legend className="block text-sm font-semibold text-gray-700 mb-3">
-              Cantidad de horas
-            </legend>
-            <div className="grid grid-cols-4 gap-2">
-              {HOURS_OPTIONS.map((h) => (
-                <button
-                  key={h}
-                  type="button"
-                  onClick={() => setHours(h)}
-                  className={`py-3.5 rounded-xl border-2 font-bold text-lg transition-all ${
-                    hours === h
-                      ? 'border-green-500 bg-green-50 text-green-700'
-                      : 'border-gray-200 text-gray-500 hover:border-green-200 hover:text-green-600'
-                  }`}
-                >
-                  {h}h
-                </button>
-              ))}
-            </div>
-          </fieldset>
+          {/* CLEANING: hours + m2 guide */}
+          {type === 'cleaning' && (
+            <fieldset className="mb-7">
+              <legend className="block text-sm font-semibold text-gray-700 mb-3">Cantidad de horas</legend>
+              {M2_GUIDE[service] && (
+                <p className="text-xs text-green-700 bg-green-50 px-3 py-2 rounded-lg mb-3 font-medium">
+                  💡 {M2_GUIDE[service]}
+                </p>
+              )}
+              <div className="grid grid-cols-4 gap-2">
+                {HOURS_OPTIONS.map((h) => (
+                  <button
+                    key={h}
+                    type="button"
+                    onClick={() => setHours(h)}
+                    className={`py-3.5 rounded-xl border-2 font-bold text-lg transition-all ${
+                      hours === h
+                        ? 'border-green-500 bg-green-50 text-green-700'
+                        : 'border-gray-200 text-gray-500 hover:border-green-200 hover:text-green-600'
+                    }`}
+                  >
+                    {h}h
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+          )}
 
-          {/* Price */}
+          {/* GARDEN: range selector */}
+          {type === 'garden' && (
+            <fieldset className="mb-7">
+              <legend className="block text-sm font-semibold text-gray-700 mb-3">Tamaño del jardín</legend>
+              <p className="text-xs text-gray-400 bg-gray-50 px-3 py-2 rounded-lg mb-3">
+                🌿 Servicio exclusivo de corte de césped · Precio fijo por trabajo completo
+              </p>
+              <div className="space-y-2">
+                {GARDEN_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => setGarden(opt.value)}
+                    className={`w-full flex items-center justify-between px-4 py-3.5 rounded-xl border-2 font-medium text-sm transition-all ${
+                      gardenOption === opt.value
+                        ? 'border-green-500 bg-green-50 text-green-700'
+                        : 'border-gray-200 text-gray-600 hover:border-green-200 hover:bg-gray-50'
+                    }`}
+                  >
+                    <span>
+                      {gardenOption === opt.value && <span className="mr-2 text-green-500">✓</span>}
+                      {opt.label}
+                    </span>
+                    <span className={`font-bold ${opt.price ? 'text-green-600' : 'text-orange-500'}`}>
+                      {opt.price ? `$${fmt(opt.price)}` : 'A presupuestar'}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+          )}
+
+          {/* POOL: size selector */}
+          {type === 'pool' && (
+            <fieldset className="mb-7">
+              <legend className="block text-sm font-semibold text-gray-700 mb-3">Tamaño de la pileta</legend>
+              <p className="text-xs text-gray-400 bg-gray-50 px-3 py-2 rounded-lg mb-3">
+                🏊 Incluye inspección, limpieza y acondicionamiento · Llevamos todos los productos
+              </p>
+              <div className="space-y-2">
+                {POOL_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => setPool(opt.value)}
+                    className={`w-full flex items-center justify-between px-4 py-3.5 rounded-xl border-2 font-medium text-sm transition-all ${
+                      poolOption === opt.value
+                        ? 'border-green-500 bg-green-50 text-green-700'
+                        : 'border-gray-200 text-gray-600 hover:border-green-200 hover:bg-gray-50'
+                    }`}
+                  >
+                    <span>
+                      {poolOption === opt.value && <span className="mr-2 text-green-500">✓</span>}
+                      <span className="font-semibold">{opt.label}</span>
+                      <span className="text-gray-400 font-normal ml-2">{opt.sub}</span>
+                    </span>
+                    <span className="font-bold text-green-600">${fmt(opt.price)}</span>
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+          )}
+
+          {/* Price display */}
           <div className="bg-green-50 border border-green-100 rounded-xl px-5 py-4 mb-6 flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 font-medium">
-                {hours} horas × ${fmt(PRICE_PER_HOUR)}/hora
-              </p>
-              <p className="text-xs text-gray-400 mt-0.5">Precio total estimado</p>
+              {type === 'cleaning' && (
+                <p className="text-sm text-gray-600 font-medium">{hours} horas × ${fmt(PRICE_PER_HOUR)}/hora</p>
+              )}
+              {type === 'garden' && (
+                <p className="text-sm text-gray-600 font-medium">
+                  Jardinero · {GARDEN_OPTIONS.find(o => o.value === gardenOption)?.label}
+                </p>
+              )}
+              {type === 'pool' && (
+                <p className="text-sm text-gray-600 font-medium">
+                  Piletero · Pileta {POOL_OPTIONS.find(o => o.value === poolOption)?.label.toLowerCase()}
+                </p>
+              )}
+              <p className="text-xs text-gray-400 mt-0.5">Precio total</p>
             </div>
-            <div className="text-3xl font-extrabold text-green-600">${fmt(total)}</div>
+            <div className={`text-3xl font-extrabold ${total ? 'text-green-600' : 'text-orange-500'}`}>
+              {total ? `$${fmt(total)}` : 'A presupuestar'}
+            </div>
           </div>
 
           <button

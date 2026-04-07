@@ -13,13 +13,13 @@ export default function Hero({ onCTA }) {
           </div>
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight mb-5">
-            La limpieza del hogar{' '}
-            <span className="text-green-600">hecha para Docta</span>
+            Todo para tu hogar en Docta,{' '}
+            <span className="text-green-600">en un solo lugar</span>
           </h1>
 
           <p className="text-lg md:text-xl text-gray-500 mb-8 max-w-lg mx-auto md:mx-0 leading-relaxed">
-            Un servicio pensado para nuestra comunidad. Reservá en minutos,{' '}
-            <span className="text-gray-700 font-medium">nosotros llevamos todo y nos encargamos del resto.</span>
+            Reservá limpieza, jardín o pileta en minutos.{' '}
+            <span className="text-gray-700 font-medium">Nosotros llevamos todo y nos encargamos del resto.</span>
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start mb-8">

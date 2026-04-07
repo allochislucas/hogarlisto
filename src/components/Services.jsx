@@ -4,7 +4,7 @@ const SERVICES = [
     title: 'Limpieza general',
     description:
       'Limpieza completa de todos los ambientes: cocina, baños, habitaciones y living. Ideal para mantenimiento regular.',
-    price: 'Desde $6.000',
+    price: 'Desde $15.000',
     tag: 'Más popular',
     hours: '2–3 horas',
     tip: '💡 Referencia: 1h cada 25m²',
@@ -14,7 +14,7 @@ const SERVICES = [
     title: 'Limpieza profunda',
     description:
       'Limpieza exhaustiva de todos los ambientes, incluyendo cocina a fondo, vajilla, rincones, muebles y azulejos. Para una puesta a punto total.',
-    price: 'Desde $9.000',
+    price: 'Desde $38.000',
     tag: null,
     hours: '4–5 horas',
     tip: '💡 Referencia: 1h cada 20m²',
@@ -24,7 +24,7 @@ const SERVICES = [
     title: 'Limpieza por horas',
     description:
       'Pagás solo las horas que necesitás. Ideal para espacios pequeños, tareas puntuales o presupuestos ajustados.',
-    price: '$3.000 / hora',
+    price: '$9.500 / hora',
     tag: null,
     hours: 'A elección',
     tip: null,

@@ -2,7 +2,11 @@ import { useState } from 'react'
 
 const WHATSAPP_NUMBER = '5492302576324'
 
-const PRICE_PER_HOUR = 3000
+const PRICE_PER_HOUR = {
+  'Limpieza general':  7500,
+  'Limpieza profunda': 9500,
+  'Limpieza por horas': 9500,
+}
 const HOURS_OPTIONS = [2, 3, 4, 5]
 
 const CLEANING_SERVICES = ['Limpieza general', 'Limpieza profunda', 'Limpieza por horas']
@@ -47,7 +51,7 @@ const buildWhatsAppURL = ({ service, date, shift, hours, gardenOption, poolOptio
   let precioLine = ''
 
   if (type === 'cleaning') {
-    precioLine = `💰 *Total estimado:* $${fmt(hours * PRICE_PER_HOUR)}`
+    precioLine = `💰 *Total estimado:* $${fmt(hours * PRICE_PER_HOUR[service])}`
   } else if (type === 'garden') {
     const opt = GARDEN_OPTIONS.find(o => o.value === gardenOption)
     precioLine = opt?.price
@@ -94,7 +98,7 @@ export default function Booking() {
   const today = new Date().toISOString().split('T')[0]
 
   const getTotal = () => {
-    if (type === 'cleaning') return hours * PRICE_PER_HOUR
+    if (type === 'cleaning') return hours * (PRICE_PER_HOUR[service] ?? 7500)
     if (type === 'garden') {
       const opt = GARDEN_OPTIONS.find(o => o.value === gardenOption)
       return opt?.price ?? null
@@ -296,7 +300,7 @@ export default function Booking() {
           <div className="bg-green-50 border border-green-100 rounded-xl px-5 py-4 mb-6 flex items-center justify-between">
             <div>
               {type === 'cleaning' && (
-                <p className="text-sm text-gray-600 font-medium">{hours} horas × ${fmt(PRICE_PER_HOUR)}/hora</p>
+                <p className="text-sm text-gray-600 font-medium">{hours} horas × ${fmt(PRICE_PER_HOUR[service] ?? 7500)}/hora</p>
               )}
               {type === 'garden' && (
                 <p className="text-sm text-gray-600 font-medium">

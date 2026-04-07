@@ -331,7 +331,7 @@ export default function Booking() {
           </button>
 
           <p className="text-center text-xs text-gray-400 mt-3">
-            Te respondemos en menos de 1 hora · Cancelación gratuita hasta 24 hs antes
+            🟢 Turnos disponibles esta semana · Confirmamos en menos de 1 hora
           </p>
         </form>
       </div>

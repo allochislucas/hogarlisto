@@ -1,16 +1,16 @@
 const SERVICES = [
   {
     icon: '🧹',
-    title: 'Limpieza del hogar',
-    description: 'Limpieza general, profunda o por horas. Para todos los ambientes. Nosotros llevamos aspiradora, productos y herramientas.',
-    price: 'Desde $15.000',
-    detail: 'General · Profunda · Por horas',
-    tip: '💡 Guía: 1h cada 25m² (general) · 1h cada 20m² (profunda)',
+    title: 'Limpieza profunda',
+    description: 'Limpieza profunda de todos los ambientes del hogar: cocina, baños, habitaciones y living.',
+    price: 'Desde $19.000',
+    detail: 'Precio según m² del hogar',
+    tip: '💡 Guía: 1h cada 20m² · Ej: 80m² → 4h',
   },
   {
     icon: '🌿',
     title: 'Jardinería',
-    description: 'Corte de césped con precio fijo por trabajo completo. Sin vueltas, sin sorpresas. Llevamos todas las herramientas.',
+    description: 'Corte de césped de manera profesional. Sin vueltas, sin sorpresas. Llevamos todas las herramientas.',
     price: 'Desde $35.000',
     detail: 'Precio por tamaño de jardín',
     tip: null,

@@ -3,16 +3,13 @@ import { useState } from 'react'
 const WHATSAPP_NUMBER = '5492302576324'
 
 const PRICE_PER_HOUR = {
-  'Limpieza general':  7500,
   'Limpieza profunda': 9500,
-  'Limpieza por horas': 9500,
 }
 const HOURS_OPTIONS = [2, 3, 4, 5]
 
-const CLEANING_SERVICES = ['Limpieza general', 'Limpieza profunda', 'Limpieza por horas']
+const CLEANING_SERVICES = ['Limpieza profunda']
 const M2_GUIDE = {
-  'Limpieza general': '1h cada 25m² · Ej: 75m² → 3h',
-  'Limpieza profunda': '1h cada 20m² · Ej: 60m² → 3h',
+  'Limpieza profunda': '1h cada 20m² · Ej: 80m² → 4h',
 }
 
 const GARDEN_OPTIONS = [
@@ -28,7 +25,7 @@ const POOL_OPTIONS = [
 ]
 
 const SERVICE_TYPES = [
-  { group: '🏠 Limpieza', items: ['Limpieza general', 'Limpieza profunda', 'Limpieza por horas'] },
+  { group: '🏠 Limpieza', items: ['Limpieza profunda'] },
   { group: '🌿 Exteriores', items: ['Jardinero', 'Piletero'] },
 ]
 

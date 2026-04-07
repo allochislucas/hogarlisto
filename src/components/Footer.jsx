@@ -60,15 +60,15 @@ export default function Footer() {
             <ul className="space-y-2.5 text-sm">
               <li className="flex items-center gap-2">
                 <span>📧</span>
-                <span>hola@hogarlisto.com</span>
+                <span>hogarlistoarg@gmail.com</span>
               </li>
               <li className="flex items-center gap-2">
                 <span>📱</span>
-                <span>+54 11 0000-0000</span>
+                <span>+54 230 257-6324</span>
               </li>
               <li className="flex items-center gap-2">
                 <span>📍</span>
-                <span>Buenos Aires, Argentina</span>
+                <span>Docta, Córdoba, Argentina</span>
               </li>
             </ul>
           </div>

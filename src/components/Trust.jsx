@@ -1,21 +1,21 @@
 const ITEMS = [
   {
-    icon: '🔒',
-    title: 'Profesionales verificadas',
+    icon: '🧴',
+    title: 'Llevamos todo nosotros',
     description:
-      'Verificamos identidad, antecedentes y experiencia de cada profesional antes de que trabaje con vos.',
+      'Productos de limpieza, herramientas y aspiradora incluidos. Vos no tenés que preparar nada.',
   },
   {
     icon: '🛡️',
     title: 'Seguro contra accidentes',
     description:
-      'Cada servicio incluye cobertura por accidentes. Tu hogar y nuestra profesional están protegidos.',
+      'Nuestras empleadas cuentan con seguro personal contra accidentes. Trabajo protegido, servicio tranquilo.',
   },
   {
-    icon: '💬',
-    title: 'Atención personalizada',
+    icon: '🔒',
+    title: 'Profesionales verificadas',
     description:
-      'Estamos disponibles para ayudarte antes, durante y después del servicio. Respondemos rápido.',
+      'Verificamos identidad, antecedentes y experiencia de cada profesional antes de que trabaje con vos.',
   },
   {
     icon: '⭐',

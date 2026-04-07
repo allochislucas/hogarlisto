@@ -4,6 +4,10 @@ const PRICE_PER_HOUR = 3000
 const SERVICE_OPTIONS = ['Limpieza general', 'Limpieza profunda', 'Limpieza por horas']
 const HOURS_OPTIONS = [2, 3, 4, 5]
 
+// ← Reemplazá con el número de WhatsApp real (sin +, con código de país)
+// Ejemplo Córdoba Argentina: 5493510000000
+const WHATSAPP_NUMBER = '5492302576324'
+
 const fmt = (n) => n.toLocaleString('es-AR')
 const fmtDate = (s) => {
   if (!s) return ''
@@ -11,13 +15,24 @@ const fmtDate = (s) => {
   return `${d}/${m}/${y}`
 }
 
+const buildWhatsAppURL = ({ service, date, shift, hours, total }) => {
+  const mensaje =
+    `¡Hola HogarListo! 👋 Quiero reservar un servicio:\n\n` +
+    `📋 *Servicio:* ${service}\n` +
+    `📅 *Fecha:* ${fmtDate(date)}\n` +
+    `🕐 *Turno:* ${shift.charAt(0).toUpperCase() + shift.slice(1)}\n` +
+    `⏱️ *Duración:* ${hours} horas\n` +
+    `💰 *Total:* $${fmt(total)}\n\n` +
+    `Quedo a la espera de confirmación. ¡Gracias!`
+
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(mensaje)}`
+}
+
 export default function Booking() {
   const [service, setService] = useState(SERVICE_OPTIONS[0])
   const [date, setDate] = useState('')
   const [shift, setShift] = useState('mañana')
   const [hours, setHours] = useState(2)
-  const [showModal, setShowModal] = useState(false)
-  const [confirmed, setConfirmed] = useState(false)
   const [dateError, setDateError] = useState(false)
 
   const total = hours * PRICE_PER_HOUR
@@ -31,20 +46,8 @@ export default function Booking() {
       return
     }
     setDateError(false)
-    setShowModal(true)
-  }
-
-  const handleConfirm = () => setConfirmed(true)
-
-  const handleClose = () => {
-    setShowModal(false)
-    if (confirmed) {
-      setConfirmed(false)
-      setDate('')
-      setHours(2)
-      setShift('mañana')
-      setService(SERVICE_OPTIONS[0])
-    }
+    const url = buildWhatsAppURL({ service, date, shift, hours, total })
+    window.open(url, '_blank')
   }
 
   return (
@@ -52,7 +55,7 @@ export default function Booking() {
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-10">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Reservá tu limpieza</h2>
-          <p className="text-gray-500 text-lg">Completá los datos y confirmá tu reserva en segundos</p>
+          <p className="text-gray-500 text-lg">Completá los datos y te contactamos por WhatsApp</p>
         </div>
 
         <form
@@ -170,102 +173,20 @@ export default function Booking() {
 
           <button
             type="submit"
-            className="w-full bg-green-600 hover:bg-green-700 active:bg-green-800 text-white font-bold py-4 rounded-xl text-lg transition-all shadow-lg shadow-green-200 hover:shadow-xl hover:scale-[1.01]"
+            className="w-full bg-green-600 hover:bg-green-700 active:bg-green-800 text-white font-bold py-4 rounded-xl text-lg transition-all shadow-lg shadow-green-200 hover:shadow-xl hover:scale-[1.01] flex items-center justify-center gap-2"
           >
-            Confirmar reserva →
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+              <path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.554 4.122 1.524 5.855L.057 23.55a.75.75 0 00.906.928l5.998-1.566A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.695 9.695 0 01-4.964-1.362l-.356-.212-3.695.964.987-3.595-.232-.37A9.698 9.698 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/>
+            </svg>
+            Reservar por WhatsApp →
           </button>
+
           <p className="text-center text-xs text-gray-400 mt-3">
-            Cancelación gratuita hasta 24 hs antes del servicio
+            Te respondemos en menos de 1 hora · Cancelación gratuita hasta 24 hs antes
           </p>
         </form>
       </div>
-
-      {/* Modal */}
-      {showModal && (
-        <div
-          className="fixed inset-0 bg-black/50 z-50 flex items-end md:items-center justify-center p-4"
-          onClick={(e) => { if (e.target === e.currentTarget) handleClose() }}
-        >
-          <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl animate-slide-up overflow-hidden">
-            {!confirmed ? (
-              <div className="p-6">
-                <div className="flex items-start justify-between mb-1">
-                  <h3 className="text-xl font-bold text-gray-900">Resumen de tu reserva</h3>
-                  <button
-                    onClick={handleClose}
-                    className="text-gray-400 hover:text-gray-600 transition-colors p-1"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </div>
-                <p className="text-gray-500 text-sm mb-6">Revisá los detalles antes de confirmar</p>
-
-                <div className="space-y-1 mb-6">
-                  {[
-                    { label: 'Servicio', value: service },
-                    { label: 'Fecha', value: fmtDate(date) },
-                    { label: 'Turno', value: shift.charAt(0).toUpperCase() + shift.slice(1) },
-                    { label: 'Duración', value: `${hours} horas` },
-                  ].map(({ label, value }) => (
-                    <div
-                      key={label}
-                      className="flex justify-between items-center py-2.5 border-b border-gray-100 last:border-0"
-                    >
-                      <span className="text-gray-500 text-sm">{label}</span>
-                      <span className="font-semibold text-gray-900 text-sm">{value}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="bg-green-50 rounded-xl px-4 py-3 flex items-center justify-between mb-6">
-                  <span className="text-gray-600 font-medium text-sm">Total</span>
-                  <span className="text-2xl font-extrabold text-green-600">${fmt(total)}</span>
-                </div>
-
-                <button
-                  onClick={handleConfirm}
-                  className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl text-base mb-3 transition-colors"
-                >
-                  Pagar ${fmt(total)} →
-                </button>
-                <button
-                  onClick={handleClose}
-                  className="w-full text-gray-500 hover:text-gray-700 font-medium py-2 text-sm transition-colors"
-                >
-                  Volver y editar
-                </button>
-              </div>
-            ) : (
-              <div className="p-6 text-center">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">¡Reserva confirmada!</h3>
-                <p className="text-gray-500 mb-1">
-                  Te vamos a contactar en las próximas horas para coordinar los detalles.
-                </p>
-                <p className="text-sm text-gray-400 mb-6">
-                  {service} · {fmtDate(date)} · Turno {shift}
-                </p>
-                <div className="bg-green-50 rounded-xl p-4 mb-6">
-                  <p className="text-3xl font-extrabold text-green-600">${fmt(total)}</p>
-                  <p className="text-xs text-gray-400 mt-1">Monto total</p>
-                </div>
-                <button
-                  onClick={handleClose}
-                  className="w-full bg-gray-900 hover:bg-gray-800 text-white font-bold py-3.5 rounded-xl transition-colors"
-                >
-                  Cerrar
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
     </section>
   )
 }

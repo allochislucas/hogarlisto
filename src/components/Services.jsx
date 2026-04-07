@@ -12,7 +12,7 @@ const SERVICES = [
     icon: '✨',
     title: 'Limpieza profunda',
     description:
-      'Limpieza exhaustiva que incluye rincones, muebles, azulejos y superficies difíciles. Para una puesta a punto total.',
+      'Limpieza exhaustiva de todos los ambientes, incluyendo cocina a fondo, vajilla, rincones, muebles y azulejos. Para una puesta a punto total.',
     price: 'Desde $9.000',
     tag: null,
     hours: '4–5 horas',

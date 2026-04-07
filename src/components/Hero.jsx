@@ -9,17 +9,17 @@ export default function Hero({ onCTA }) {
         {/* Copy */}
         <div className="flex-1 text-center md:text-left animate-fade-in">
           <div className="inline-flex items-center gap-2 bg-green-100 text-green-700 text-sm font-semibold px-3 py-1.5 rounded-full mb-5">
-            ✨ Servicio confiable y verificado
+            📍 Exclusivo para vecinos de Docta
           </div>
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight mb-5">
-            Reservá tu limpieza{' '}
-            <span className="text-green-600">del hogar en minutos</span>
+            La limpieza del hogar{' '}
+            <span className="text-green-600">hecha para Docta</span>
           </h1>
 
           <p className="text-lg md:text-xl text-gray-500 mb-8 max-w-lg mx-auto md:mx-0 leading-relaxed">
-            Elegí día, horario y listo.{' '}
-            <span className="text-gray-700 font-medium">Nosotros nos encargamos del resto.</span>
+            Un servicio pensado para nuestra comunidad. Reservá en minutos,{' '}
+            <span className="text-gray-700 font-medium">nosotros llevamos todo y nos encargamos del resto.</span>
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start mb-8">
@@ -39,8 +39,8 @@ export default function Hero({ onCTA }) {
 
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2 justify-center md:justify-start text-sm text-gray-500">
             <span className="flex items-center gap-1.5"><span className="text-green-500">✓</span> Profesionales verificadas</span>
+            <span className="flex items-center gap-1.5"><span className="text-green-500">✓</span> Llevamos todos los productos</span>
             <span className="flex items-center gap-1.5"><span className="text-green-500">✓</span> Seguro incluido</span>
-            <span className="flex items-center gap-1.5"><span className="text-green-500">✓</span> Sin compromisos</span>
           </div>
         </div>
 

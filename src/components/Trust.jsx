@@ -2,55 +2,45 @@ const ITEMS = [
   {
     icon: '🧴',
     title: 'Llevamos todo nosotros',
-    description:
-      'Productos de limpieza, herramientas y aspiradora incluidos. Vos no tenés que preparar nada.',
+    description: 'Productos, herramientas y aspiradora incluidos en todos los servicios. No necesitás preparar nada.',
   },
   {
-    icon: '🛡️',
-    title: 'Seguro contra accidentes',
-    description:
-      'Nuestras empleadas cuentan con seguro personal contra accidentes. Trabajo protegido, servicio tranquilo.',
+    icon: '💬',
+    title: 'Coordinación por WhatsApp',
+    description: 'Reservás en minutos y te confirmamos por WhatsApp. Sin apps, sin registros, sin vueltas.',
   },
   {
-    icon: '🔒',
-    title: 'Profesionales verificadas',
-    description:
-      'Verificamos identidad, antecedentes y experiencia de cada profesional antes de que trabaje con vos.',
+    icon: '🔍',
+    title: 'Profesionales seleccionadas',
+    description: 'Elegimos con cuidado a las personas que trabajan con vos. Verificamos identidad y experiencia.',
   },
   {
-    icon: '⭐',
-    title: 'Garantía de satisfacción',
-    description:
-      'Si no quedás conforme con el resultado, te enviamos otra profesional sin costo adicional.',
+    icon: '⚡',
+    title: 'Respuesta rápida',
+    description: 'Te respondemos en menos de una hora para confirmar tu reserva y coordinar los detalles.',
   },
 ]
 
 export default function Trust() {
   return (
-    <section className="py-16 md:py-24 px-4 bg-gray-50">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
+    <section className="py-16 md:py-20 px-4 bg-gray-50">
+      <div className="max-w-5xl mx-auto">
+        <div className="text-center mb-10">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Por qué elegirnos</h2>
-          <p className="text-gray-500 text-lg">Seguridad y confianza en cada reserva</p>
+          <p className="text-gray-500">Simple, confiable y sin complicaciones</p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {ITEMS.map((item, idx) => (
             <div
               key={idx}
-              className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:border-green-200 hover:shadow-md transition-all duration-200"
+              className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:border-green-200 hover:shadow-md transition-all duration-200 text-center"
             >
-              <div className="text-4xl mb-4 text-center">{item.icon}</div>
-              <h3 className="font-bold text-gray-900 mb-2 text-center text-base">{item.title}</h3>
-              <p className="text-gray-500 text-sm leading-relaxed text-center">{item.description}</p>
+              <div className="text-4xl mb-3">{item.icon}</div>
+              <h3 className="font-bold text-gray-900 mb-2 text-sm">{item.title}</h3>
+              <p className="text-gray-500 text-sm leading-relaxed">{item.description}</p>
             </div>
           ))}
-        </div>
-
-        {/* Social proof strip */}
-        <div className="mt-12 bg-green-600 rounded-2xl p-6 md:p-8 text-white text-center">
-          <p className="text-2xl font-extrabold mb-2">+500 hogares ya reservaron con nosotros</p>
-          <p className="text-green-100 text-sm">Calificación promedio: ⭐ 4.9/5 · Sin contratiempos</p>
         </div>
       </div>
     </section>

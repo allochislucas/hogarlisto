@@ -129,7 +129,10 @@ export default function Booking() {
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-10">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Reservá tu servicio</h2>
-          <p className="text-gray-500 text-lg">Completá los datos y te contactamos por WhatsApp</p>
+          <p className="text-gray-500 text-lg max-w-md mx-auto">
+            Elegí el servicio, la fecha y el turno.{' '}
+            <span className="text-gray-700 font-medium">Te respondemos por WhatsApp para confirmar.</span>
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="bg-white border-2 border-gray-100 rounded-2xl p-6 md:p-8 shadow-sm">

@@ -18,7 +18,7 @@ export default function App() {
       <Header />
       <Hero onCTA={scrollToBooking} />
       <HowItWorks />
-      <FeatureImageSection onCTA={scrollToBooking} />
+      <FeatureImageSection />
       <Services onReserve={scrollToBooking} />
       <Booking />
       <Trust />
